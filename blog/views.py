@@ -22,7 +22,7 @@ class PostDetailView(generic.DetailView):
     def post(self, request: HttpRequest, *args, **kwargs):
         self.object = self.get_object()
         form = CommentaryForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and request.user.is_authenticated:
             new_commentary = form.save(commit=False)
             new_commentary.post = self.object
             new_commentary.user = request.user
