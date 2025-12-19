@@ -33,4 +33,10 @@ class PostDetailView(generic.DetailView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = CommentaryForm()
+        context["form"].full_clean()
+
+        if self.request.user.is_anonymous:
+            context["form"].fields["content"].disabled = True
+
+        context["user"] = self.request.user
         return context

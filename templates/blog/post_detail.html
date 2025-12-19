@@ -15,7 +15,7 @@
   <form action="" method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <input type="submit" value="Add comment">
+    <input type="submit" value="Add comment" {{ user.is_anonymous|yesno:"disabled," }}>
     <input type="hidden" name="next" value="{{ next }}">
   </form>
 {% endblock %}
