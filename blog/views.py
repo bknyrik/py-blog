@@ -1,17 +1,14 @@
-from django.http import HttpRequest, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.http import HttpRequest, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.views import generic
 
-
-from .models import Post, Commentary
+from .models import Post
 from .forms import CommentaryForm
 
 
 class PostListView(generic.ListView):
     model = Post
-    queryset = Post.objects.prefetch_related("owner").order_by("-created_time")
+    queryset = Post.objects.select_related("owner").order_by("-created_time")
     paginate_by = 5
     template_name = "blog/index.html"
 
@@ -19,7 +16,7 @@ class PostListView(generic.ListView):
 class PostDetailView(generic.DetailView):
     model = Post
 
-    def post(self, request: HttpRequest, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponseRedirect:
         self.object = self.get_object()
         form = CommentaryForm(request.POST)
         if form.is_valid() and request.user.is_authenticated:
