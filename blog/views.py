@@ -16,7 +16,12 @@ class PostListView(generic.ListView):
 class PostDetailView(generic.DetailView):
     model = Post
 
-    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponseRedirect:
+    def post(
+        self,
+        request: HttpRequest,
+        *args,
+        **kwargs
+    ) -> HttpResponseRedirect:
         self.object = self.get_object()
         form = CommentaryForm(request.POST)
         if form.is_valid() and request.user.is_authenticated:
